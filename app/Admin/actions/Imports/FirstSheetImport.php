@@ -4,7 +4,7 @@ namespace App\Admin\Actions\Imports;
 
 use App\Models\DeclareInfo;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -18,6 +18,26 @@ class FirstSheetImport implements ToCollection, WithBatchInserts, WithChunkReadi
 {
     private $round;
 
+
+    //简称
+    protected $name_salutation = [
+        'Mr.',
+        'Ms.',
+        'lng',
+        'Dr.',
+        'Dr.lng.'
+    ];
+
+    //申报类型
+
+    protected $purchase_type = [
+        'LC',
+        'AC',
+        'ELC',
+        'NLC'
+    ];
+
+
     public function __construct(int $round)
     {
         $this->round = $round;
@@ -25,26 +45,19 @@ class FirstSheetImport implements ToCollection, WithBatchInserts, WithChunkReadi
 
     /**
      * @param array $row
-     *
-     * @return Model|Model[]|null
+     * @return string
      */
     public function model(array $row)
     {
+        $row = array_map('trim', $row);
+        if (!in_array($row['name_salutation'], $this->name_salutation)) {
+            throw new \Exception('name_salutation错误，只能选择以下其中一个：' . implode('；', $this->name_salutation));
+        }
+        if (!in_array($row['purchase_type'], $this->purchase_type)) {
+            throw new \Exception('purchase_type错误，只能选择以下其中一个：' . implode('；', $this->purchase_type));
+        }
 
-        dump($row);
-
-
-//        // 断数据是否
-//        $user = DeclareInfo::query()->where('mobile', '=', $row['手机'])->first();
-//        if ($user) {
-//            // 存在返回 null
-//            return null;
-//        }
-        // 数据库对应的字段
-//        return new DeclareInfo([
-//            'name' => $row['姓名'],
-//            'gender' => $row['性别'],
-//        ]);
+        DeclareInfo::query()->updateOrCreate(['tax' => $row['tax'], 'status' => 0], $row);
     }
 
     public function collection(Collection $rows)
