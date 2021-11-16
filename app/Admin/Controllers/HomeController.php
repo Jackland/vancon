@@ -15,10 +15,10 @@ class HomeController extends Controller
     {
         return $content
             ->header('Dashboard')
-            ->description('Description...')
+            ->description('图表展示模板...')
             ->body(function (Row $row) {
                 $row->column(6, function (Column $column) {
-                    $column->row(Dashboard::title());
+                    $column->row(WelcomeController::title());
                     $column->row(new Examples\Tickets());
                 });
 
