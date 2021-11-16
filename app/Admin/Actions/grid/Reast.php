@@ -29,6 +29,9 @@ class Reast extends AbstractTool
 <span class="grid-expand" data-toggle="modal" data-target="#{$id}">
    <a href="javascript:void(0)"><button class="btn btn-outline-info ">上传报备excel</button></a>
 </span>
+<span class="grid-expand">
+   <a href="/declare.xlsx" target="_blank"><button class="btn btn-outline-info ">excel模板下载</button></a>
+</span>
 HTML;
     }
     protected function modal($id)

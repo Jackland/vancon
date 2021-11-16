@@ -25,6 +25,11 @@ class DeclareInfoController extends AdminController
             $grid->column('first_name');
             $grid->column('last_name');
             $grid->column('tax');
+            $grid->column('status')
+             ->using(['Lead Claim Rejected' => 'Lead Claim Rejected', 'Lead Claim Authorized' => 'Lead Claim Authorized'])
+            ->label(['default' => 'primary', 'Lead Claim Rejected' => 'danger', 'Lead Claim Authorized' => 'success']);
+
+            $grid->column('message');
             $grid->column('purchase_type');
             $grid->column('var_sales');
             $grid->column('street');
@@ -44,8 +49,11 @@ class DeclareInfoController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
+                $filter->equal('tax');
+                $filter->equal('status');
 
             });
+            
         });
     }
 
@@ -65,6 +73,8 @@ class DeclareInfoController extends AdminController
             $show->field('first_name');
             $show->field('last_name');
             $show->field('tax');
+            $show->field('status');
+            $show->field('message');
             $show->field('purchase_type');
             $show->field('var_sales');
             $show->field('street');
@@ -91,6 +101,7 @@ class DeclareInfoController extends AdminController
             $form->text('first_name');
             $form->text('last_name');
             $form->text('tax');
+            $form->text('status');
             $form->text('purchase_type');
             $form->text('var_sales');
             $form->text('street');

@@ -2,6 +2,7 @@
 
 
 namespace App\Admin\Actions\Form;
+use App\Admin\Actions\Imports\DataExcel;
 use App\Admin\Actions\Imports\FirstSheetImport;
 use Dcat\Admin\Widgets\Form;
 use Maatwebsite\Excel\Facades\Excel;
@@ -12,7 +13,11 @@ class Import extends Form
     public function handle(array $input)
     {
         //文件地址
-        $file = env('APP_URL').'/upload/'.$input['file'];
+        //$file = env('APP_URL').'/upload/'.$input['file'];
+        // $obj = Excel::import(new FirstSheetImport(time()), $input['file'],'public');
+        //return $this->success('导入成功');
+
+
         try {
             $obj = Excel::import(new FirstSheetImport(time()), $input['file'],'public');
             return $this->success('导入成功');

@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Imports;
 
 use App\Models\DeclareInfo;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -49,6 +50,10 @@ class FirstSheetImport implements ToCollection, WithBatchInserts, WithChunkReadi
     public function model(array $row)
     {
         $row = array_map('trim', $row);
+        $info = DeclareInfo::query()->where('tax',$row['tax'])->first();
+        if( $info ) {
+            return null;
+        }
         if (!in_array($row['name_salutation'], $this->name_salutation)) {
             throw new \Exception('name_salutation错误，只能选择以下其中一个：' . implode('；', $this->name_salutation));
         }
@@ -56,7 +61,22 @@ class FirstSheetImport implements ToCollection, WithBatchInserts, WithChunkReadi
             throw new \Exception('purchase_type错误，只能选择以下其中一个：' . implode('；', $this->purchase_type));
         }
 
-        DeclareInfo::query()->updateOrCreate(['tax' => $row['tax'], 'status' => 0], $row);
+        return new DeclareInfo([
+            'company' => $row['company'],
+            'name_salutation' => $row['name_salutation'],
+            'first_name' => $row['first_name'],
+            'last_name' => $row['last_name'],
+            'tax' => $row['tax'],
+            'purchase_type' => $row['purchase_type'],
+            'var_sales' => $row['var_sales'],
+            'street' => $row['street'],
+            'city' => $row['city'],
+            'province' => $row['province'],
+            'postal_code' => $row['postal_code'],
+            'country' => $row['country'],
+        ]);
+
+        //DeclareInfo::query()->updateOrCreate(['tax' => $row['tax'], 'status' => 0], $row);
     }
 
     public function collection(Collection $rows)
