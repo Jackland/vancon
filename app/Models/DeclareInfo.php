@@ -13,7 +13,7 @@ class DeclareInfo extends Model
     protected $table = 'declare_info';
 
     protected $fillable = ['company', 'name_salutation', 'first_name', 'last_name', 'tax', 'purchase_type', 'var_sales', 'street',
-        'city', 'province', 'postal_code', 'country'];
+        'city', 'province', 'postal_code', 'country','status','message'];
 
 
 

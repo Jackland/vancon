@@ -15,6 +15,7 @@ Route::group([
     $router->get('/', 'HomeController@index');
 
     $router->resource('declare/info', 'DeclareInfoController');
+    $router->resource('commit/record', 'CommitRecordController');
 
 });
 
