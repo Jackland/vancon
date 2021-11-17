@@ -6,11 +6,27 @@ use App\Admin\Actions\Grid\Reast;
 use App\Admin\Repositories\DeclareInfo;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 
 class DeclareInfoController extends AdminController
 {
+
+    protected $status = [
+        'Lead Claim Rejected' =>'Lead Claim Rejected',
+        'Lead Claim Authorized' =>'Lead Claim Authorized'
+
+    ];
+
+    public function index(Content $content)
+    {
+        return $content
+            ->body($this->grid())
+            ->header('报备信息')
+            ->description('系统监控的数据');
+    }
+
     /**
      * Make a grid builder.
      *
@@ -26,7 +42,7 @@ class DeclareInfoController extends AdminController
             $grid->column('last_name');
             $grid->column('tax');
             $grid->column('status')
-             ->using(['Lead Claim Rejected' => 'Lead Claim Rejected', 'Lead Claim Authorized' => 'Lead Claim Authorized'])
+             ->using($this->status)
             ->label(['default' => 'primary', 'Lead Claim Rejected' => 'danger', 'Lead Claim Authorized' => 'success']);
 
             $grid->column('message');
@@ -37,7 +53,7 @@ class DeclareInfoController extends AdminController
             $grid->column('province');
             $grid->column('postal_code');
             $grid->column('country');
-            $grid->column('created_at');
+            $grid->column('created_at')->sortable();
             $grid->column('updated_at')->sortable();
 
             $grid->export();
@@ -47,13 +63,19 @@ class DeclareInfoController extends AdminController
                 $tools->append(new Reast());
             });
 
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+                $selector->select('status', '报备状态', $this->status);
+            });
+
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
                 $filter->equal('tax');
                 $filter->equal('status');
+                $filter->equal('company');
 
             });
-            
+
         });
     }
 

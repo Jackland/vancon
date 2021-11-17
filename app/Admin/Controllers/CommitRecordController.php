@@ -5,11 +5,21 @@ namespace App\Admin\Controllers;
 use App\Admin\Repositories\CommitRecord;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 
 class CommitRecordController extends AdminController
 {
+
+    public function index(Content $content)
+    {
+        return $content
+            ->body($this->grid())
+            ->header('报备记录')
+            ->description('定时提交的记录');
+    }
+
     /**
      * Make a grid builder.
      *
@@ -25,7 +35,7 @@ class CommitRecordController extends AdminController
             $grid->column('created_at');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
                 $filter->equal('tax');
@@ -67,7 +77,7 @@ class CommitRecordController extends AdminController
             $form->text('status');
             $form->text('message');
             $form->text('created_at');
-        
+
             $form->display('created_at');
             $form->display('updated_at');
         });
